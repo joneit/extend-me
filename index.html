@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test harness for extend()</title>
+
+    <script src="extend-me.js"></script>
+
+    <script>
+        window.onload = function() {
+
+            var Parabola = Base.extend({
+                initialize: function (a, b) {
+                    this.a = a;
+                    this.b = b;
+                },
+                calculate: function(x) {
+                    return this.a * Math.pow(x, 2) + (this.b * x);
+                }
+            });
+
+            var ParabolaWithIntercept = Parabola.extend({
+                initialize: function(a, b, c) {
+                    this.c = c;
+                },
+                calculate: function(x) {
+                    var y = this.super.calculate.apply(this, arguments);
+                    return y + this.c;
+                }
+            });
+
+            var parabola = new ParabolaWithIntercept(3, 2, 1);
+            var list = document.getElementsByTagName('ol')[0];
+
+            for (var x = -3; x <= 3; x += 0.5) {
+                var item = document.createElement('li');
+                item.innerHTML = '<i>f</i>(' + x + ') = ' + parabola.calculate(x) + ' // ' + (3 * Math.pow(x, 2) + 2 * x + 1);
+                list.appendChild(item);
+            }
+
+        }
+    </script>
+</head>
+<body>
+<dl>
+    <dt>
+        <i>f</i>(<i>x</i>) = <i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i>
+    </dt>
+    <dd>where <i>a</i> = 3</dd>
+    <dd>where <i>b</i> = 2</dd>
+    <dd>where <i>c</i> = 1</dd>
+</dl>
+
+    <ol></ol>
+</body>
+</html>
